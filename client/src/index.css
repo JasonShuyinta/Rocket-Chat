@@ -1,0 +1,212 @@
+:root {
+  --send-bg: #0B93F6;
+  --send-color: white;
+  --receive-bg: #E5E5EA;
+  --receive-text: black;
+  --page-background: white;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.dashboard {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid grey;
+}
+
+.sidebar-mobile {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid grey;
+}
+
+.id-container {
+  padding: 1rem;
+  border-top: 1px solid grey;
+  font-size: small;
+}
+
+.conversation {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.login {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100vh;
+}
+
+.open-conversation {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--page-background);
+}
+
+.full-height {
+  height: 100vh;
+}
+
+.conversation-header {
+  padding: 1rem;
+  background: linear-gradient(to top, #6a85b6 0%, #bac8e0 100%);  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid grey;
+}
+
+.conversation-header-mobile {
+  padding: 1rem 0.3rem;
+  background: linear-gradient(to top, #6a85b6 0%, #bac8e0 100%);  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid grey;
+}
+
+.open-conversation-container {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0.4rem 2rem;
+}
+
+.single-message-container {
+  margin: 0.2rem 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.single-message-container > p {
+  max-width: 255px;
+  word-wrap: break-word;
+  margin-bottom: 12px;
+  line-height: 24px;
+  position: relative;
+	padding: 6px 20px;
+  border-radius: 15px;
+}
+
+.single-message-container > p::before, p::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 24px;
+}
+
+.send {
+	color: var(--send-color); 
+	background: var(--send-bg);
+	align-self: flex-end;
+}
+
+.send::before {
+  right: -7px;
+  width: 20px;
+  background-color: var(--send-bg);
+  border-bottom-left-radius: 16px 14px;
+}
+
+.send::after {
+  right: -26px;
+  width: 26px;
+  background-color: var(--page-background);
+  border-bottom-left-radius: 10px;
+}
+
+.receive {
+  background: var(--receive-bg);
+	color: black;
+  align-self: flex-start;
+}
+
+.receive::before {
+  left: -7px;
+  width: 20px;
+  background-color: var(--receive-bg);
+  border-bottom-right-radius: 16px 14px;
+}
+
+.receive::after {
+  left: -26px;
+  width: 26px;
+  background-color: var(--page-background);
+  border-bottom-right-radius: 10px;
+}
+
+.from-me {
+  align-items: end;
+  align-self: end;
+}
+
+.from-others {
+  align-items: flex-start;
+}
+
+.timestamp {
+  font-size: xx-small;
+}
+
+.from-me-timestamp {
+  text-align: right;
+}
+
+.from-others-timestamp {
+  text-align: left;
+}
+
+.sender {
+  color: grey;
+  font-size: small;
+}
+
+.sender-from-me {
+  text-align: right;
+}
+
+.sender-from-others {
+  text-align: left;
+}
+
+.input-container {
+  background-color: #e9e9e9;
+  padding: 0.3rem 0;
+}
+
+.text-input {
+  margin: 0.5rem 1.5rem !important;
+}
+
+.text-input > div:first-of-type {
+  border-radius: 10px !important;
+  height: 45px !important;
+}
+
+.EmojiPickerReact > .emoji-class {
+  display: none !important;
+}
