@@ -1,0 +1,81 @@
+/* groovylint-disable LineLength */
+pipeline {
+        agent any
+
+         environment {
+                CREDENTIALS_ID ='Rocket-Chat'
+                BUCKET = 'rocket-chat-bucket-dotjson'
+                PATTERN = 'target/*.jar'
+            }
+
+        tools {
+            maven 'maven_3.8.6'
+            jdk 'jdk11'
+        }
+
+        stages {
+            stage('Git Checkout') {
+                steps {
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHubPasswordLocalSystem', url: 'https://github.com/JasonShuyinta/Rocket-Chat.git']]])
+                }
+            }
+//             stage('Junit Tests') {
+//                 steps {
+//                     withCredentials([string(credentialsId: 'spring-mongo-uri-test', variable: 'springMongoUriTest'), string(credentialsId: 'authentication_key', variable: 'AuthKey')]) {
+//                     bat 'mvn test -f backend/pom.xml -Dspring.app.secretKey=%AuthKey% -Dspring.data.mongodb.uri=%springMongoUriTest% -Dactive.profile=test'
+//                     }
+//                 }
+//             }
+            stage('Build Artifacts') {
+                steps {
+//                     bat 'mvn -f backend/pom.xml clean install -Dmaven.test.skip=true -Dactive.profile=prod'
+                        bat 'mvn -f server/pom.xml clean install -Dmaven.test.skip=true -Dactive.profile=prod'
+                }
+//                 post {
+//                     success {
+//                         bat '''
+//                         cd backend/target
+//                         rename \"todo-list-backend.jar\" \"todo-list-backend-%BUILD_NUMBER%.jar\"
+//                         '''
+//                         archiveArtifacts 'backend/target/*.jar'
+//                     }
+//                 }
+            }
+
+            stage('Store to Google Cloud Storage') {
+                steps{
+                    // If we name pattern build_environment.txt, this will upload the local file to our GCS bucket.
+                    step([$class: 'ClassicUploadStep', credentialsId: env.CREDENTIALS_ID,  bucket: "gs://${env.BUCKET}", pattern: env.PATTERN])
+                }
+            }
+
+//             stage('Build Docker Image') {
+//                 steps {
+//                     bat '''
+//                         cd backend
+//                         docker build -t jason9722/todo-list-app .
+//                         '''
+//                 }
+//             }
+//
+//             stage('Push to Docker Hub') {
+//                 steps {
+//                     withCredentials([string(credentialsId: 'DockerId', variable: 'DockerPassword')]) {
+//                         bat 'docker login -u jason9722 -p %DockerPassword%'
+//                         bat 'docker push jason9722/todo-list-app'
+//                     }
+//                 }
+//             }
+//         stage('Run shell script on EC2') {
+//             steps {
+//                 withCredentials([string(credentialsId: 'ec2-server', variable: 'ec2ServerUrl')]) {
+//                     bat 'ssh -T %ec2ServerUrl% "docker stop todolistapp"'
+//                     bat 'ssh -T %ec2ServerUrl% "docker rm todolistapp"'
+//                     bat 'ssh -T %ec2ServerUrl% "docker rmi jason9722/todo-list-app"'
+//                     bat 'ssh -T %ec2ServerUrl% "docker pull jason9722/todo-list-app:latest" '
+//                     bat 'ssh -T %ec2ServerUrl% "docker run -d -p 8003:8003 --name todolistapp jason9722/todo-list-app:latest" '
+//                 }
+//             }
+//         }
+        }
+}
