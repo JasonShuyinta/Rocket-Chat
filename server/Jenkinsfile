@@ -5,7 +5,7 @@ pipeline {
          environment {
                 CREDENTIALS_ID ='Rocket-Chat'
                 BUCKET = 'rocket-chat-bucket-dotjson'
-                PATTERN = 'target/*.jar'
+                PATTERN = 'server/target/*.jar'
             }
 
         tools {
