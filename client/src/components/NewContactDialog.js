@@ -22,7 +22,7 @@ export default function NewContactDialog({
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`${SERVER_URL}/contact/addContact/${user.id}/${contactUsername}`)
+      .get(`${SERVER_URL}/contact/addContact/${user.id}/${contactUsername}`)
       .then((res) => {
         setContacts((prevContacts) => {
           return [...prevContacts, res.data];

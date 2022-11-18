@@ -1,0 +1,42 @@
+pipeline {
+        agent any
+
+        stages {
+            stage('Git Checkout') {
+                steps {
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'GitHubPasswordLocalSystem', url: 'https://github.com/JasonShuyinta/Rocket-Chat.git']]])
+                }
+            }
+
+            stage('Build Docker Image') {
+                steps {
+                    bat '''
+                        cd socket
+                        docker build -t jason9722/rocket-socket .
+                        '''
+                }
+            }
+
+            stage('Push to Docker Hub') {
+                steps {
+                    withCredentials([string(credentialsId: 'DockerId', variable: 'DockerPassword')]) {
+                        bat 'docker login -u jason9722 -p %DockerPassword%'
+                        bat 'docker push jason9722/rocket-socket'
+                    }
+                }
+            }
+
+            stage('Start Socket on GCP Compute Engine') {
+                steps {
+                    withCredentials([file(credentialsId: 'gcp-key', variable: 'gcp-key'), 
+                    string(credentialsId: 'gcp-ip-address', variable: 'gcp-ip-address')]) {
+                            //   bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker stop rocketchat" '
+                            //   bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rm rocketchat" '
+                            //   bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rmi jason9722/rocket-chat-app" '
+                            bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker pull jason9722/rocket-socket:latest"'
+                            bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker run -d -p 5000:5000 --name rocketsocket jason9722/rocket-socket:latest"'
+                    }
+                }
+            }
+        }
+}

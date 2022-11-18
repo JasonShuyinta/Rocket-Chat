@@ -1,6 +1,8 @@
 const { Server } = require("socket.io");
+const { createServer } = require("http");
 
-const io = new Server(5000, {
+const httpServer = createServer();
+const io = new Server(httpServer , {
   cors: {
     origin: "http://localhost:3000",
   },
@@ -15,4 +17,8 @@ io.on("connection", (socket) => {
       socket.to(recipient.id).emit("receive-message", { conversationId });
     });
   });
+});
+
+httpServer.listen(5000, () => {
+  console.log("Server is listening at port 5000!");
 });
