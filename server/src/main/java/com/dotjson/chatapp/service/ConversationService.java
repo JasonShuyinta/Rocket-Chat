@@ -85,6 +85,14 @@ public class ConversationService {
             log.error(ERROR, CONVERSATION_NOT_PRESENT,  Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
             throw new NotFoundException(CONVERSATION_NOT_PRESENT);
         }
+        if(m.getAuthorId() == null ) {
+            log.error(ERROR, "Message Author is not present",  Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
+            throw new NotFoundException("Message author is not present");
+        }
+        if(m.getText() == null ) {
+            log.error(ERROR, "Message text is not present",  Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
+            throw new NotFoundException("Message text is not present");
+        }
         m.setTimestamp(LocalDateTime.now());
         Message message = messageRepository.save(m);
         Conversation conversation = optionalConversation.get();

@@ -37,13 +37,16 @@ public class ContactController {
         }
     }
 
-    @PostMapping("/addContact/{userId}/{contactUsername}")
+    @GetMapping("/addContact/{userId}/{contactUsername}")
     public ResponseEntity<UserResponse> addContact(@PathVariable("userId") String userId, @PathVariable("contactUsername") String contactUsername) {
         log.info(START,Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName() );
         try {
             UserResponse response = contactService.addContact(userId, contactUsername);
             log.info(END, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
             return ResponseEntity.ok(response);
+        } catch (NotFoundException e) {
+            log.error(ERROR, e, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName() );
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             log.error(ERROR, e, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName() );
             return ResponseEntity.internalServerError().build();

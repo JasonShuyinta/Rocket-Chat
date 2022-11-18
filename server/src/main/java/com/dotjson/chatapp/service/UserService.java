@@ -11,6 +11,7 @@ import com.dotjson.chatapp.utils.BadRequestException;
 import com.dotjson.chatapp.utils.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class UserService {
     private ContactRepository contactRepository;
     @Autowired
     private UserTransformer userTransformer;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserResponse getUserById(String id) throws NotFoundException {
         log.info(START, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
@@ -51,6 +54,7 @@ public class UserService {
         else {
             User userModel = userTransformer.dtoToModel(userRequest);
             userModel.setConversationId(new ArrayList<>());
+            userModel.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             UserResponse response = userTransformer.modelToDto(userRepository.save(userModel));
             Contact contactModel = new Contact();
             contactModel.setMainUserId(response.getId());
@@ -73,7 +77,7 @@ public class UserService {
             throw new NotFoundException(USERNAME_NOT_PRESENT);
         }
         User user = userExists.get();
-        if(!user.getPassword().equals(userRequest.getPassword())) {
+        if(!passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
             log.error(ERROR, "Incorrect credentials",Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName() );
             throw new BadRequestException("Incorrect credentials");
         }
