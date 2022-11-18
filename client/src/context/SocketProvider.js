@@ -12,7 +12,7 @@ export function SocketProvider({  children }) {
   const [socket, setSocket] = useState();
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5000", {
+    const newSocket = io("http://35.229.19.149:5000", {
       query: { userId: localStorageUser.id  },
     });
     setSocket(newSocket);

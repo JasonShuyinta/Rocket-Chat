@@ -76,7 +76,7 @@ pipeline {
                           bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rm rocketchat" '
                           bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rmi jason9722/rocket-chat-app" '
                           bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker pull jason9722/rocket-chat-app:latest" '
-                          bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker run -d -p 443:4443 --name rocketchat -e --server.port=\"%port%\" -e --spring.data.mongodb.uri=\"%mongo-prod%\" jason9722/rocket-chat-app:latest " '
+                          bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker run -d -p 443:443 --name rocketchat -e --server.port=\"%port%\" -e --spring.data.mongodb.uri=\"%mongo-prod%\" jason9722/rocket-chat-app:latest " '
 
                         }
                     }
