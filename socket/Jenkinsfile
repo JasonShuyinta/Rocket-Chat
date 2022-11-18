@@ -34,7 +34,7 @@ pipeline {
                             bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rm rocketsocket" '
                             bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rmi jason9722/rocket-socket" '
                             bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker pull jason9722/rocket-socket:latest"'
-                            bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker run -d -p 5000:5000 --name rocketsocket jason9722/rocket-socket:latest"'
+                            bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker run -d -p 444:444 --name rocketsocket jason9722/rocket-socket:latest"'
                     }
                 }
             }

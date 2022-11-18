@@ -6,5 +6,5 @@ ADD . .
 
 FROM mhart/alpine-node:base-9
 COPY --from=build /socket .
-EXPOSE 5000
+EXPOSE 444
 CMD [ "node", "server.js" ]
