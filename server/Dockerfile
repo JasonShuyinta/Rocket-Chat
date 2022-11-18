@@ -1,4 +1,4 @@
 FROM openjdk:11 as build
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} rocket-chat-app.jar
-ENTRYPOINT ["java","-jar", "-Dspring.profiles.active=prod","/rocket-chat-app.jar"]
+ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","/rocket-chat-app.jar"]
