@@ -30,9 +30,9 @@ pipeline {
                 steps {
                     withCredentials([file(credentialsId: 'gcp-key', variable: 'gcp-key'), 
                     string(credentialsId: 'gcp-ip-address', variable: 'gcp-ip-address')]) {
-                            //   bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker stop rocketchat" '
-                            //   bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rm rocketchat" '
-                            //   bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rmi jason9722/rocket-chat-app" '
+                            bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker stop rocketsocket" '
+                            bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rm rocketsocket" '
+                            bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker rmi jason9722/rocket-socket" '
                             bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker pull jason9722/rocket-socket:latest"'
                             bat 'ssh -i %gcp-key% jason@%gcp-ip-address% "sudo docker run -d -p 5000:5000 --name rocketsocket jason9722/rocket-socket:latest"'
                     }
