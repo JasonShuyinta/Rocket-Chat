@@ -21,4 +21,5 @@ io.on("connection", (socket) => {
 
 httpServer.listen(5000, () => {
   console.log("Server is listening at port 5000!");
+  return "Server is started";
 });
