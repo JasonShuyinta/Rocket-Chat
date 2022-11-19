@@ -13,7 +13,7 @@ function App() {
     </StateProvider>
   );
 
-  return <>{dashboard}</>;
+  return <div style={{height: "100vh"}}>{dashboard}</div>;
 }
 
 export default App;
