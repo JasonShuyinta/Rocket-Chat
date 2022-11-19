@@ -14,7 +14,7 @@ import static com.dotjson.chatapp.utils.Constant.*;
 
 @Slf4j
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/contact")
 public class ContactController {
 

@@ -1,6 +1,5 @@
 package com.dotjson.chatapp.controller;
 
-import com.dotjson.chatapp.model.conversation.Conversation;
 import com.dotjson.chatapp.model.conversation.ConversationFullResponse;
 import com.dotjson.chatapp.model.conversation.ConversationRequest;
 import com.dotjson.chatapp.model.conversation.ConversationResponse;
@@ -17,7 +16,7 @@ import static com.dotjson.chatapp.utils.Constant.*;
 @RestController
 @RequestMapping("/conversation")
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class ConversationController {
 
     @Autowired
