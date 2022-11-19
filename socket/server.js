@@ -1,8 +1,25 @@
 const { Server } = require("socket.io");
-const { createServer } = require("http");
+const http = require('http');
 
-const httpServer = createServer();
-const io = new Server(httpServer , {
+const server = http.createServer((req, res) => {
+  const headers = {
+    'Access-Control-Allow-Origin':'*',
+    'Access-Control-Allow-Methods':'POST, GET, OPTIONS'
+  }
+
+  if (['GET', 'POST'].indexOf(req.method) > -1) {
+    res.writeHead(200, headers);
+    return;
+  }
+
+  res.writeHead(405, headers);
+  res.end(`${req.method} is not allowed for the request.`);
+
+}).listen(5000, () => {
+  console.log("Server is listening at port 5000");
+})
+
+const io = new Server(server , {
   cors: {
     origin: ["http://localhost:3000", '0.0.0.0/0'] 
   },
@@ -17,9 +34,4 @@ io.on("connection", (socket) => {
       socket.to(recipient.id).emit("receive-message", { conversationId });
     });
   });
-});
-
-httpServer.listen(5000, '0.0.0.0', () => {
-  console.log("Server is listening at port 5000!");
-  return "Server is started";
 });
