@@ -4,7 +4,7 @@ const { createServer } = require("http");
 const httpServer = createServer();
 const io = new Server(httpServer , {
   cors: {
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", '0.0.0.0/0'] 
   },
 });
 
@@ -19,7 +19,7 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(5000, () => {
+httpServer.listen(5000, '0.0.0.0', () => {
   console.log("Server is listening at port 5000!");
   return "Server is started";
 });
