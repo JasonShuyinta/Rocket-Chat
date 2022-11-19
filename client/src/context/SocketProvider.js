@@ -3,7 +3,7 @@ import io from "socket.io-client"
 import { useStateContext } from "./StateProvider";
 const SocketContext = React.createContext();
 
-const SOCKET_URL = `${process.env.REACT_APP_SOCKET_URL}`
+const SOCKET_URL = `${process.env.REACT_APP_SERVER_URL}`
 
 export function useSocket() {
   return useContext(SocketContext);
