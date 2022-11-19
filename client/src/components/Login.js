@@ -8,7 +8,9 @@ import {
   IconButton,
   Avatar,
   Divider,
+  InputAdornment
 } from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material"
 import axios from "axios";
 import { useStateContext } from "../context/StateProvider";
 
@@ -23,6 +25,12 @@ export default function Login() {
   const [newPassword, setNewPassword] = useState("");
   const [avatar, setAvatar] = useState("");
   const [image, setImage] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
+  const [showSignUpPwd, setShowSignUpPwd] = useState(false);
+  const [usernameAlreadyTakenError, setUsernameAlreadyTakenError] = useState(false);
+  const [genericError, setGenericError] = useState(false);
+  const [incorrectCredentials, setIncorrectCredentials] = useState(false);
+  const [usernameDoesNotExist, setUsernameDoesNotExist] = useState(false);
 
   const handleAvatar = (file) => {
     setAvatar(URL.createObjectURL(file));
@@ -43,7 +51,15 @@ export default function Login() {
         setUser(res.data);
         setLocalStorageUser(res.data)
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if(err.response.status === 403) {
+          setIncorrectCredentials(true);
+        } else if(err.response.status === 404) {
+          setUsernameDoesNotExist(true);
+        } else {
+          setGenericError(true);
+        }
+      });
   };
 
   const create = () => {
@@ -57,7 +73,13 @@ export default function Login() {
         setUser(res.data);
         setLocalStorageUser(res.data)
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if(err.response.status === 403) {
+          setUsernameAlreadyTakenError(true);
+        } else {
+          setGenericError(true);
+        }
+      });
   };
 
   return (
@@ -67,15 +89,34 @@ export default function Login() {
           <TextField
             placeholder="Username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="text"
+            onChange={(e) => { setUsername(e.target.value); setIncorrectCredentials(false); setUsernameDoesNotExist(false); }}
             style={{ marginBottom: "1rem" }}
           />
           <TextField
             placeholder="Password"
+            type={showPwd ? "text" : "password"}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {setPassword(e.target.value); ; setIncorrectCredentials(false); setUsernameDoesNotExist(false); }}
             style={{ marginBottom: "1rem" }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment
+                  style={{ cursor: "pointer" }}
+                  position="end"
+                  onClick={() => setShowPwd(!showPwd)}
+                >
+                  {showPwd ? (
+                    <VisibilityOff style={{ color: "gray" }} />
+                  ) : (
+                    <Visibility style={{ color: "gray" }} />
+                  )}
+                </InputAdornment>
+              ),
+            }}
           />
+          {usernameDoesNotExist && <span style={{color: "red"}}>Username does not exist, please try another username.</span>}
+          {incorrectCredentials && <span style={{color: "red"}}>Incorrect credentials. Please try again.</span>}
           <Button variant="contained" color="primary" onClick={() => login()}>
             Login
           </Button>
@@ -106,18 +147,37 @@ export default function Login() {
             placeholder="Enter your username"
             required
             value={newUsername}
-            onChange={(e) => setNewUsername(e.target.value)}
+            onChange={(e) => { setNewUsername(e.target.value); setUsernameAlreadyTakenError(false); setGenericError(false); }}
             fullWidth
             style={{ marginBottom: "1rem" }}
           />
           <TextField
             placeholder="Enter your password"
             value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            onChange={(e) => { setNewPassword(e.target.value); setUsernameAlreadyTakenError(false); setGenericError(false);  }}
             required
             fullWidth
+            type={showSignUpPwd ? "text" : "password"}
             style={{ marginBottom: "1rem" }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment
+                  style={{ cursor: "pointer" }}
+                  position="end"
+                  onClick={() => setShowSignUpPwd(!showSignUpPwd)}
+                >
+                  {showSignUpPwd ? (
+                    <VisibilityOff style={{ color: "gray" }} />
+                  ) : (
+                    <Visibility style={{ color: "gray" }} />
+                  )}
+                </InputAdornment>
+              ),
+            }}
           />
+          <br></br>
+          {usernameAlreadyTakenError && <span style={{color:"red"}}>Username already taken. Please choose another username</span>}
+          {genericError && <span style={{color: "ref"}}>Something went wrong, please try again later.</span>}
           <Button
             variant="contained"
             color="secondary"

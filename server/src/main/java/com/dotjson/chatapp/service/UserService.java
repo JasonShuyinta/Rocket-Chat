@@ -8,7 +8,9 @@ import com.dotjson.chatapp.model.user.UserTransformer;
 import com.dotjson.chatapp.repository.ContactRepository;
 import com.dotjson.chatapp.repository.UserRepository;
 import com.dotjson.chatapp.utils.BadRequestException;
+import com.dotjson.chatapp.utils.IncorrectCredentialsException;
 import com.dotjson.chatapp.utils.NotFoundException;
+import com.dotjson.chatapp.utils.UsernameAlreadyTakenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +42,7 @@ public class UserService {
         return userTransformer.modelToDto(op.get());
     }
 
-    public UserResponse save(UserRequest userRequest) throws BadRequestException {
+    public UserResponse save(UserRequest userRequest) throws BadRequestException, UsernameAlreadyTakenException {
         log.info(START, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
         if (userRequest.getUsername() == null || userRequest.getPassword() == null) {
             log.error(ERROR, USERNAME_PASSWORD_MISSING,Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName() );
@@ -49,7 +51,7 @@ public class UserService {
         Optional<User> userExists = userRepository.findByUsername(userRequest.getUsername());
         if (userExists.isPresent()) {
             log.error(ERROR, "Username is already taken",Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName() );
-            throw new BadRequestException("Username is already taken");
+            throw new UsernameAlreadyTakenException("Username is already taken");
         }
         else {
             User userModel = userTransformer.dtoToModel(userRequest);
@@ -65,7 +67,7 @@ public class UserService {
         }
     }
 
-    public UserResponse login(UserRequest userRequest) throws BadRequestException, NotFoundException {
+    public UserResponse login(UserRequest userRequest) throws BadRequestException, NotFoundException, IncorrectCredentialsException {
         log.info(START, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
         if(userRequest.getUsername() == null || userRequest.getPassword() == null) {
             log.error(ERROR, USERNAME_PASSWORD_MISSING,Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName() );
@@ -79,7 +81,7 @@ public class UserService {
         User user = userExists.get();
         if(!passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
             log.error(ERROR, "Incorrect credentials",Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName() );
-            throw new BadRequestException("Incorrect credentials");
+            throw new IncorrectCredentialsException("Incorrect credentials");
         }
         log.info(END, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
         return userTransformer.modelToDto(user);

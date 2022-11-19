@@ -36,7 +36,7 @@ class UserControllerErrorTest extends ChatAppBackendApplicationTests {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input)))
                 .andReturn();
-        Assertions.assertEquals(400, result.getResponse().getStatus());
+        Assertions.assertEquals(403, result.getResponse().getStatus());
     }
 
     @Test
@@ -72,7 +72,7 @@ class UserControllerErrorTest extends ChatAppBackendApplicationTests {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input)))
                 .andReturn();
-        Assertions.assertEquals(400, result.getResponse().getStatus());
+        Assertions.assertEquals(403, result.getResponse().getStatus());
     }
 
 }

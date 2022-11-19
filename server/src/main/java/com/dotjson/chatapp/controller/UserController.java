@@ -4,9 +4,12 @@ import com.dotjson.chatapp.model.user.UserRequest;
 import com.dotjson.chatapp.model.user.UserResponse;
 import com.dotjson.chatapp.service.UserService;
 import com.dotjson.chatapp.utils.BadRequestException;
+import com.dotjson.chatapp.utils.IncorrectCredentialsException;
 import com.dotjson.chatapp.utils.NotFoundException;
+import com.dotjson.chatapp.utils.UsernameAlreadyTakenException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +47,9 @@ public class UserController {
             UserResponse response = userService.save(userRequest);
             log.info(END, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
             return ResponseEntity.ok(response);
+        } catch (UsernameAlreadyTakenException e) {
+            log.error(ERROR, e, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (BadRequestException e) {
             log.error(ERROR, e, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
             return ResponseEntity.badRequest().build();
@@ -60,6 +66,9 @@ public class UserController {
             UserResponse response = userService.login(userRequest);
             log.info(END, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
             return ResponseEntity.ok(response);
+        } catch (IncorrectCredentialsException e) {
+            log.error(ERROR, e, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (NotFoundException e) {
             log.error(ERROR, e, Thread.currentThread().getStackTrace()[1].getMethodName(), this.getClass().getSimpleName());
             return ResponseEntity.notFound().build();
