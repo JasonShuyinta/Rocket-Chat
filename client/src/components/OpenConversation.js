@@ -22,7 +22,12 @@ import axios from "axios";
 import { useStateContext } from "../context/StateProvider";
 import { useSocket } from "../context/SocketProvider";
 import { useMediaQuery } from "react-responsive";
+import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
+
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import { Box } from "@mui/system";
 
 const SERVER_URL = `${process.env.REACT_APP_SERVER_URL}`;
 
@@ -39,6 +44,7 @@ export default function OpenConversation() {
 
   const [text, setText] = useState("");
   const [openMembersDialog, setOpenMembersDialog] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const socket = useSocket();
 
   const setRef = useCallback((node) => {
@@ -238,12 +244,33 @@ export default function OpenConversation() {
         </div>
         <form onSubmit={handleSubmit}>
           <div style={{ display: "flex" }} className="input-container">
+            <Box
+              sx={{
+                display: showEmojiPicker ? "inline" : "none",
+                zIndex: 10,
+                position: "fixed",
+                bottom: 65,
+                left: 300,
+              }}
+            >
+              <Picker style={{width: "50%", height: "50%"}} data={data} onEmojiSelect={(emoji) => setText( prev => prev + emoji.native) }/>
+            </Box>
             <FormControl variant="outlined" fullWidth className="text-input">
               <OutlinedInput
                 fullWidth
                 type="text"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <IconButton
+                      style={{ padding: "0" }}
+                      onClick={() => setShowEmojiPicker((prev) => !prev)}
+                    >
+                      <SentimentSatisfiedAltIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton type="submit" edge="end">
