@@ -1,10 +1,12 @@
-FROM mhart/alpine-node:9 AS build
-WORKDIR /socket
-ADD package.json .
+FROM node:12.18.1
+ 
+WORKDIR /app
+ 
+COPY package.json package.json
+COPY package-lock.json package-lock.json
+ 
 RUN npm install
-ADD . .
-
-FROM mhart/alpine-node:base-9
-COPY --from=build /socket .
-EXPOSE 5000
+ 
+COPY . .
+ 
 CMD [ "node", "server.js" ]
